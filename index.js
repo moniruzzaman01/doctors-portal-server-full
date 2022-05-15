@@ -18,10 +18,19 @@ async function run() {
   try {
     await client.connect();
     const serviceCollection = client.db("doctorsPortal").collection("services");
+    const appointmentCollection = client
+      .db("doctorsPortal")
+      .collection("appointments");
 
     //----------------------------
     app.get("/services", async (req, res) => {
       const result = await serviceCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/appointment", async (req, res) => {
+      const appointment = req.body;
+      const result = await appointmentCollection.insertOne(appointment);
       res.send(result);
     });
     //------------------------------
