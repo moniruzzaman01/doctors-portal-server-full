@@ -33,6 +33,14 @@ async function run() {
       const result = await appointmentCollection.insertOne(appointment);
       res.send(result);
     });
+
+    app.get("/appointmentByEmail/:email", async (req, res) => {
+      const email = req.params.email;
+      const result = await appointmentCollection
+        .find({ patientEmail: email })
+        .toArray();
+      res.send(result);
+    });
     //------------------------------
   } finally {
     // await client.close()
