@@ -42,8 +42,19 @@ async function run() {
 
     app.post("/appointment", async (req, res) => {
       const appointment = req.body;
-      const result = await appointmentCollection.insertOne(appointment);
-      res.send(result);
+      const email = appointment.patientEmail;
+      const date = appointment.date;
+
+      const isExist = await appointmentCollection.findOne({
+        patientEmail: email,
+        date,
+        treatmentName: appointment.treatmentName,
+      });
+      if (!isExist) {
+        const result = await appointmentCollection.insertOne(appointment);
+        return res.send(result);
+      }
+      res.send(isExist);
     });
 
     app.get("/appointmentByEmail/:email", async (req, res) => {
